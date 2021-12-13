@@ -1,0 +1,28 @@
+version: "2.4"
+services:
+  vpn:
+    build:
+      context: .
+      labels:
+        - ocproxy-pulsevpn/ubuntu:1.0
+    container_name: ocproxy-pulsevpn-ubuntu
+    image: ocproxy-pulsevpn/ubuntu:latest
+    privileged: true
+    environment:
+      - OPENCONNECT_OS=linux
+      - OPENCONNECT_PROTOCOL=pulse
+      - OPENCONNECT_URL=https://sslvpn.pulse.es
+      - OPENCONNECT_FINGERPRINT=
+      - OPENCONNECT_AUTHGROUP=Certificado FNMT
+      - OPENCONNECT_USER=my_user
+      - OPENCONNECT_PASSWORD=
+      - OPENCONNECT_OPTIONS=--disable-ipv6 --no-dtls -c /cert/cer.pem -k /cert/key.pem
+      - OPENCONNECT_OCPROXY_OPTIONS=-g 30 -D 1080
+    volumes:
+      - ./cert/cer.pem:/cert/cer.pem
+      - ./cert/key.pem:/cert/key.pem
+    ports:
+      - "1080:1080"
+    cap_add:
+      - NET_ADMIN
+    network_mode: bridge
