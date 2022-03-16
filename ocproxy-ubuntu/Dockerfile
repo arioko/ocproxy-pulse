@@ -12,7 +12,7 @@ RUN cd /usr/local/src/ocproxy-1.60 && \
 
 FROM ubuntu:22.04
 
-LABEL maintainer="YGAM" description="OCProxy PulseVPN - Ubuntu" location="/"
+LABEL maintainer="YGAM"
 
 ENV TZ Europe/Madrid
 ENV LANGUAGE es_ES
@@ -20,7 +20,7 @@ ENV LANG es_ES.UTF-8
 ENV LC_ALL es_ES.UTF-8
 
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y curl bash tzdata jq locales locales-all openconnect openssl libevent-dev net-tools && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y curl bash tzdata jq locales locales-all openconnect openssl openfortivpn libevent-dev net-tools && \
     ln -snf /usr/share/zoneinfo/Europe/Madrid /etc/localtime && echo "Europe/Madrid" > /etc/timezone
 
 # Configuramos el idioma
@@ -29,7 +29,7 @@ RUN sed -i '/es_ES.UTF-8/s/^# //g' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=es_ES.UTF-8 LANGUAGE=es_ES LC_ALL=es_ES.UTF-8
 
-COPY ./cert /cert
+#COPY ./cert /cert
 COPY --from=ocproxy-builder /usr/local/src/ocproxy-1.60/ocproxy /usr/local/bin/ocproxy
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
